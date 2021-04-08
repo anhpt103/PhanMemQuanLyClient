@@ -20,6 +20,8 @@ import Footer from 'components/Footer';
 import GlobalStyle from '../../global-styles';
 import GlobalFonts from 'fonts';
 
+import routes from 'routes';
+
 const AppWrapper = styled.div`
   margin: 0 auto;
   height: 100%;
@@ -36,9 +38,26 @@ export default function App() {
       </Helmet>
       <Header />
       <Switch>
-        <Route exact path="/" component={HomePage} />
+        {routes.map(route => (
+          <Route
+            key={route.name}
+            path={route.path}
+            exact={route.exact || false}
+            render={props =>
+              route.component ? (
+                <route.layout {...props}>
+                  <route.component {...props} />
+                </route.layout>
+              ) : (
+                <Redirect to={route.redirect} />
+              )
+            }
+          />
+        ))}
+
+        {/* <Route exact path="/" component={HomePage} />
         <Route path="/features" component={FeaturePage} />
-        <Route path="" component={NotFoundPage} />
+        <Route path="" component={NotFoundPage} /> */}
       </Switch>
       <Footer />
       <GlobalStyle />
